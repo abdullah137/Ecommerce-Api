@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AnyObjectSchema, ValidationError, date, object, string } from "yup";
-import logger from "../../../utils/logging";
+import logger from "../../utils/logging";
 
 export const validateUser = ( schema:AnyObjectSchema) => {
 	return async(req:Request, res:Response, next:NextFunction) => {

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AnyObjectSchema, ValidationError, string, number, boolean, object } from "yup";
-import logger from "../../../utils/logging";
+import logger from "../../utils/logging";
 
 export const validateProduct = ( schema: AnyObjectSchema ) => {
 	return async(req:Request, res:Response, next:NextFunction) => {
@@ -25,7 +25,7 @@ export const validateProduct = ( schema: AnyObjectSchema ) => {
 	};
 };
 
-// For Uploading Update
+// For Uploading Products
 export const ProductSchema = {
 	data: object().shape({
 		name: string().required(),

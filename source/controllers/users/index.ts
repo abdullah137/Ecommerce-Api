@@ -151,4 +151,13 @@ const getAllUsers = (req: Request, res:Response) => {
 	}) ;
 };
 
-export default { registerUser, login, getAllUsers};
+const logoutUser = (req: Request, res: Response) => {
+	res.locals.user = null;
+	return res.status(200).json({
+		message: "User Logout Out Successfully",
+		status: true,
+		user: []
+	});
+};
+
+export default { registerUser, logoutUser, login, getAllUsers};

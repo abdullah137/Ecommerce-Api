@@ -11,6 +11,7 @@ import connect from "./database/connect";
 import indexRoutes from "./routes/index";
 import usersRoutes from "./routes/users/index";
 import productRoutes from "./routes/products/index";
+import cartRoutes from "./routes/cart/index";
 
 const app:Application = express();
 
@@ -49,6 +50,7 @@ app.use((req:Request, res:Response, next:NextFunction) => {
 app.use("/", indexRoutes);
 app.use("/users", usersRoutes);
 app.use("/products", productRoutes);
+app.use("/cart", cartRoutes);
 
 // Error Handling
 app.use((req:Request, res:Response) => {

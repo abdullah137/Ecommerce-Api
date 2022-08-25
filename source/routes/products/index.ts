@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 
 // Importing middleware for validation
-import { ProductSchema, validateProduct } from "../../middleware/validation/product/product";
+import { ProductSchema, validateProduct } from "../../middleware/validation/product";
 
 // Imports controllers Here
 import controller from "../../controllers/products/index";
