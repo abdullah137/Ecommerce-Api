@@ -62,4 +62,4 @@ app.use((req:Request, res:Response) => {
 });
 
 // Creating the Server
-http.createServer(app).listen(config.server.port, () => logger.info("Server Started"));
+http.createServer(app).listen(config.server.port, () => logger.info("Server Started "+config.server.port));
