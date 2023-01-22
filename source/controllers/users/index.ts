@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserData } from "../../interfaces/validations/users/user";
 import bcrypt from "bcryptjs";
+import { pick } from "lodash";
 
 // Logger function
 import logger from "../../utils/logging";
@@ -70,7 +71,7 @@ const registerUser = (req:Request, res:Response,) => {
 					return res.status(201).json({
 						message: "User Created Successfuly",
 						status: true,
-						result
+						data: pick(result, ["_id", "lastname", "firstname", "email"])
 					});
 
 				}).catch(error => {
