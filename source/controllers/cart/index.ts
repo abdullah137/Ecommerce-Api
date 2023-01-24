@@ -17,6 +17,7 @@ interface ArrayProduct {
 		name: string,
 		price: number,
 	},
+	subTotal: number,
 	quantity: number,
 	price: number,
 	total: number,
@@ -25,14 +26,6 @@ interface ArrayProduct {
 	createdAt: Date
 }
 
-interface Testing {
-	_id: string;
-	items: ArrayProduct[],
-	subTotal: number,
-	createdAt: Date,
-	updatedAt: Date,
-	__v: number;
-}
 
 const addToCart = async (req: Request, res:Response) => {
 	const data = res.locals.data as Cart;
@@ -61,36 +54,55 @@ const addToCart = async (req: Request, res:Response) => {
 			select: "name price total"
 		});
 
-		console.log(cart);
-		console.log(cart[0].items);
+		
+		const indexFound = cart[0].items.findIndex((item: any) => item.productId.id == productId);
 		
 		if(cart.length > 0) {
+			
+			console.log("it is here 1");
+
 			// Check if index exists
 			const indexFound = cart[0].items.findIndex((item: any) => item.productId.id == productId);
 			// ---- This removed an item from the cart if found any
 			if(indexFound !== -1 && Number(quantity) <= 0) {
 				cart[0].items.splice(indexFound, 1);
-			}
-
-
-			if(cart[0].items.length == 0) {
-				cart[0].subTotal = 0;
-			} else {
-				cart[0].subTotal = cart[0].items.map((item: any) => item?.total).reduce((acc, next) => acc + next);
-			}
-
-		} else if(quantity > 0) {
-			cart[0].items.push({
-				productId: productId,
-				quanity: quantity,
-				price: productDetails?.price,
-				total: productDetails?.price * quantity
-			});
-			cart[0].subTotal = cart[0].items.map((item: any) => item?.total).reduce((acc, next) => acc + next);
-		}else {
-
-			console.log("It is here 2");
 			
+				if(cart[0].items.length == 0) {
+					cart[0].subTotal = 0;
+				} else {
+					cart[0].subTotal = cart[0].items.map((item: any) => item?.total).reduce((acc, next) => acc + next);
+				}
+
+			} else if(indexFound !== -1) {
+				const findProduct: ArrayProduct = cart[indexFound].items[indexFound];
+				findProduct.quantity = findProduct.quantity + quantity;		
+				findProduct.total = findProduct.quantity * productDetails.price;
+				findProduct.price = productDetails.price;
+				cart[0].subTotal = cart[0].items.map((item: any) => item.total).reduce((acc, next) => acc+next);
+			} 
+			// Check if quantity is greateer than 0 then add item to items array
+			else if(quantity > 0) {
+
+				cart[0].items.push({
+					productId: productId,
+					quanity: quantity,
+					price: productDetails.price,
+					total: productDetails.price * quantity
+				});
+
+				cart[0].subTotal = cart[0].items.map((item: any) => item.total).reduce((acc, next) => acc + next);
+			}
+
+			const savedData = await cart[0].save();
+			
+			return res.status(200).json({
+				message: "QUERY_SUCCESS",
+				status: true,
+				data: savedData
+			});
+
+		} else {
+
 			const cartData = {
 				items: [{
 					productId: productId,
@@ -175,4 +187,4 @@ const emptyCart = async(req: Request, res: Response) => {
 
 
 
-export default { addToCart, getCart, emptyCart };
+export default { getCart, addToCart, emptyCart };
